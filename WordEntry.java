@@ -28,10 +28,18 @@ public class WordEntry {
 		return _positions;
 	}
 
-	public float getTermFrequency(String pageName) {
-		int freq = 0;
-		//TODO
-		return freq;
+	public double getTermFrequency(String pageName) {
+		double freq = 0.0;
+		int N = 1;
+		Iterator<Position> it = _positions.iterator();
+		while (it.hasNext()) {
+			PageEntry pEntry = it.next().getPageEntry();
+			if (pEntry.equals(pageName)) {
+				++freq;
+				N = pEntry.getNumWords();
+			}
+		}
+		return freq/N;
 	}
 
 	public boolean equals(String word) {
