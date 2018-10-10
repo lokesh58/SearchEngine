@@ -3,6 +3,7 @@ import java.io.*;
 public class PageEntry {
 	private String _pageName;
 	private PageIndex _pageIndex;
+	private int _numWords;
 
 	PageEntry(String pageName) throws Exception {
 		_pageName = pageName;
@@ -37,6 +38,7 @@ public class PageEntry {
 				_pageIndex.addPositionForWord(words[i], new Position(this, idx));
 			}
 		}
+		_numWords = idx-1;
 	}
 
 	private boolean isConnector(String word) {
@@ -102,6 +104,10 @@ public class PageEntry {
 
 	public String getPageName() {
 		return _pageName;
+	}
+
+	public int getNumWords() {
+		return _numWords;
 	}
 
 	public boolean equals(PageEntry other) {
