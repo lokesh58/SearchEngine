@@ -54,33 +54,33 @@ public class MyAVLTree<T extends Comparable<T>> {
 		}
 	}
 
-	private Node insert(Node root, T data) {
-		if (root == null) {
+	private Node insert(Node node, T data) {
+		if (node == null) {
 			return new Node(data);
 		} else {
-			if (data.compareTo(root._data) > 0) {
-				root._right = insert(root._right, data);
+			if (data.compareTo(node._data) > 0) {
+				node._right = insert(node._right, data);
 			} else {
-				root._left = insert(root._left, data);
+				node._left = insert(node._left, data);
 			}
-			root._height = 1+Math.max(height(root._left), height(root._right));
-			int balance = getBalance(root);
+			node._height = 1+Math.max(height(node._left), height(node._right));
+			int balance = getBalance(node);
 			if (balance > 1) {
-				if (data.compareTo(root._left._data) <= 0) {
-					return rightRotate(root);
+				if (data.compareTo(node._left._data) <= 0) {
+					return rightRotate(node);
 				} else {
-					root._left = leftRotate(root._left);
-					return rightRotate(root);
+					node._left = leftRotate(node._left);
+					return rightRotate(node);
 				}
 			} else if (balance < -1) {
-				if (data.compareTo(_root._right._data) > 0) {
-					return leftRotate(root);
+				if (data.compareTo(node._right._data) > 0) {
+					return leftRotate(node);
 				} else {
-					root._right = rightRotate(root._right);
-					return leftRotate(root);
+					node._right = rightRotate(node._right);
+					return leftRotate(node);
 				}
 			} else {
-				return root;
+				return node;
 			}
 		}
 	}
@@ -89,17 +89,17 @@ public class MyAVLTree<T extends Comparable<T>> {
 		return find(_root, key);
 	}
 
-	private T find(Node root, T key) {
-		if (root == null) {
+	private T find(Node node, T key) {
+		if (node == null) {
 			return null;
 		} else {
-			int result = key.compareTo(root._data);
+			int result = key.compareTo(node._data);
 			if (result == 0) {
-				return root._data;
+				return node._data;
 			} else if (result > 0) {
-				return find(root._right, key);
+				return find(node._right, key);
 			} else {
-				return find(root._left, key);
+				return find(node._left, key);
 			}
 		}
 	}
@@ -108,70 +108,70 @@ public class MyAVLTree<T extends Comparable<T>> {
 		_root = delete(_root, key);
 	}
 	
-	private Node maxValueNode(Node root) {
-		Node curr = root;
+	private Node maxValueNode(Node node) {
+		Node curr = node;
 		while (curr._right != null) {
 			curr = curr._right;
 		}
 		return curr;
 	}
 
-	private Node delete(Node root, T key) {
-		if (root == null) {
-			return root;
+	private Node delete(Node node, T key) {
+		if (node == null) {
+			return node;
 		} else {
-			int compareResult = key.compareTo(root._data);
+			int compareResult = key.compareTo(node._data);
 			if (compareResult > 0) {
-				root._right = delete(root._right, key);
+				node._right = delete(node._right, key);
 			} else if (compareResult < 0) {
-				root._left = delete(root._left, key);
+				node._left = delete(node._left, key);
 			} else {
-				if ((root._left == null) || (root._right == null)) {
+				if ((node._left == null) || (node._right == null)) {
 					//1 or 0 child case
 					Node temp = null;
-					if (root._left == null) {
-						temp = root._right;
+					if (node._left == null) {
+						temp = node._right;
 					} else {
-						temp = root._left;
+						temp = node._left;
 					}
 
 					if (temp == null) {
 						//0 child case
-						root = null;
+						node = null;
 					} else {
 						//1 child case
-						root = temp;
+						node = temp;
 					}
 				} else {
 					//2 child case
-					Node temp = maxValueNode(root._left);//Inorder predecessor is the biggest in the left subtree (for node with a left subtree)
-					root._data = temp._data;
+					Node temp = maxValueNode(node._left);//Inorder predecessor is the biggest in the left subtree (for node with a left subtree)
+					node._data = temp._data;
 					//Delete the inorder predecessor
-					root._left = delete(root._left, temp._data);
+					node._left = delete(node._left, temp._data);
 				}
 			}
-			if (root == null) {
-				//If there was only 1 child then this will happen
-				return root;
+			if (node == null) {
+				//If there was only 1 child that was deleted
+				return node;
 			} else {
-				root._height = 1+Math.max(height(root._left), height(root._right));
-				int balance = height(root._left)-height(root._right);
+				node._height = 1+Math.max(height(node._left), height(node._right));
+				int balance = height(node._left)-height(node._right);
 				if (balance > 1) {
-					if (getBalance(root._left) > 0) {
-						return rightRotate(root);
+					if (getBalance(node._left) > 0) {
+						return rightRotate(node);
 					} else {
-						root._left = leftRotate(root._left);
-						return rightRotate(root);
+						node._left = leftRotate(node._left);
+						return rightRotate(node);
 					}
 				} else if (balance < -1) {
-					if (getBalance(root._right) <= 0) {
-						return leftRotate(root);
+					if (getBalance(node._right) <= 0) {
+						return leftRotate(node);
 					} else {
-						root._right = rightRotate(root._right);
-						return leftRotate(root);
+						node._right = rightRotate(node._right);
+						return leftRotate(node);
 					}
 				} else {
-					return root;
+					return node;
 				}
 			}
 		}
