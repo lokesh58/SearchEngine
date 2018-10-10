@@ -14,6 +14,10 @@ public class InvertedPageIndex {
 			_invertedPageIndex.addPositionsForWord(it.next());
 		}
 	}
+	
+	public WordEntry getWordEntryFor(String word) throws Exception {
+		return _invertedPageIndex.getWordEntryFor(word);
+	}
 
 	public MySet<PageEntry> getPagesWhichContainWord(String word) {
 		MySet<PageEntry> webpages = new MySet<PageEntry>();
