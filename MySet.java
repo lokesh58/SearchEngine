@@ -25,6 +25,10 @@ public class MySet<T> implements Iterable<T> {
 		}
 	}
 
+	public void deleteElement(T element) throws Exception {
+		_list.delete(element);
+	}
+
 	public MySet<T> union(MySet<T> otherSet) {
 		MySet<T> unionSet = new MySet<T>();
 		Iterator<T> it = _list.iterator();
