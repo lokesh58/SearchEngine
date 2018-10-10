@@ -151,13 +151,13 @@ public class MyAVLTree<T extends Comparable<T>> {
 				}
 			}
 			if (node == null) {
-				//If there was only 1 child that was deleted
+				//If there were no children and node got deleted
 				return node;
 			} else {
 				node._height = 1+Math.max(height(node._left), height(node._right));
-				int balance = height(node._left)-height(node._right);
+				int balance = getBalance(node);
 				if (balance > 1) {
-					if (getBalance(node._left) > 0) {
+					if (getBalance(node._left) >= 0) {
 						return rightRotate(node);
 					} else {
 						node._left = leftRotate(node._left);
@@ -175,44 +175,5 @@ public class MyAVLTree<T extends Comparable<T>> {
 				}
 			}
 		}
-	}
-
-	public void display() {
-		MyLinkedList<Node> list = new MyLinkedList<>();
-		list.insertRear(_root);
-		while (!list.isEmpty()) {
-			Node curr = null;
-			try {
-				curr = list.deleteFront();
-			} catch (Exception e) {}
-			if (curr == null) {
-				System.out.print("* ");
-			} else {
-				System.out.print(curr._data+"("+curr._height+") ");
-				list.insertRear(curr._left);
-				list.insertRear(curr._right);
-			}
-		}
-		System.out.print('\n');
-	}
-
-	public static void main(String args[]) {
-		MyAVLTree<Integer> t = new MyAVLTree<>();
-		t.insert(12);
-		t.display();
-		t.insert(33);
-		t.display();
-		t.insert(36);
-		t.display();
-		t.insert(3);
-		t.display();
-		t.insert(2);
-		t.display();
-		t.insert(13);
-		t.display();
-		t.insert(39);
-		t.display();
-		t.insert(37);
-		t.display();
 	}
 }
