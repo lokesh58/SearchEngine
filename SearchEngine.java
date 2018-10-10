@@ -28,21 +28,48 @@ public class SearchEngine {
 	}
 
 	private String pagesWhichContainWord(String word) {
-		MySet<PageEntry> webpages = _invPgIdx.getPagesWhichContainWord(word);
-		if (webpages.isEmpty()) {
-			return "No webpage contains word "+word;
-		} else {
-			String pages = "";
-			Iterator<PageEntry> it = webpages.iterator();
-			while (it.hasNext()) {
-				PageEntry pEntry = it.next();
-				pages += pEntry.getPageName();
-				if (it.hasNext()) {
-					pages += ", ";
+		WordEntry wEntry = null;
+		try {
+			wEntry = _invPgIdx.getWordEntryFor(word);
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+		MySet<String> webpages = new MySet<>();
+		Iterator<Position> it = wEntry.getAllPositionsForThisWord().iterator();
+		while (it.hasNext()) {
+			webpages.addElement(it.next().getPageEntry().getPageName());
+		}
+		MyLinkedList<String> sortedPages = new MyLinkedList<>();
+		double invDocFreq = Math.log(_webpageDatabase.size())-Math.log(webpages.size());
+		while (!webpages.isEmpty()) {
+			String maxRelPage = "";
+			double maxRel = -1.0;
+			Iterator<String> iter = webpages.iterator();
+			while (iter.hasNext()) {
+				String page = iter.next();
+				double rel = wEntry.getTermFrequency(page)*invDocFreq;
+				if (rel > maxRel) {
+					maxRel = rel;
+					maxRelPage = page;
 				}
 			}
-			return pages;
+			sortedPages.insertRear(maxRelPage);
+			try {
+				webpages.deleteElement(maxRelPage);
+			} catch (Exception e) {
+				System.err.println("Error in pagesWhichConatinWord");
+				break;
+			}
 		}
+		String pages = "";
+		Iterator<String> iter = sortedPages.iterator();
+		while (iter.hasNext()) {
+			pages += iter.next();
+			if (iter.hasNext()) {
+				pages += ", ";
+			}
+		}
+		return pages;
 	}
 
 	private String positionOfWordInAPage(String word, String pageName) {
