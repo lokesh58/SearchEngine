@@ -10,6 +10,7 @@ all:
 	javac InvertedPageIndex.java
 	javac SearchResult.java
 	javac SearchEngine.java
+	javac MySort.java
 	javac checker.java
 
 run:
