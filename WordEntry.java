@@ -28,6 +28,10 @@ public class WordEntry {
 		return _positions.getInOrderList();
 	}
 
+	public MyAVLTree<Position> getPositionTree() {
+		return _positions;
+	}
+
 	public double getTermFrequency(String pageName) {
 		double freq = 0.0;
 		int N = 1;
