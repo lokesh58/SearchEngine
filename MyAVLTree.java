@@ -1,4 +1,6 @@
-public class MyAVLTree<T extends Comparable<T>> {
+import java.util.Iterator;
+
+public class MyAVLTree<T extends Comparable<T>> implements Iterable<T> {
 	class Node {
 		T _data;
 		Node _left, _right;
@@ -188,5 +190,10 @@ public class MyAVLTree<T extends Comparable<T>> {
 				}
 			}
 		}
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return getInOrderList().iterator();
 	}
 }
