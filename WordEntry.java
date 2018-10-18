@@ -2,21 +2,21 @@ import java.util.Iterator;
 
 public class WordEntry {
 	private String _word;
-	private MyLinkedList<Position> _positions;
+	private MyAVLTree<Position> _positions;
 
 	WordEntry(String word) {
 		_word = word;
-		_positions = new MyLinkedList<Position>();
+		_positions = new MyAVLTree<Position>();
 	}
 
 	public void addPosition(Position position) {
-		_positions.insertRear(position);
+		_positions.insert(position);
 	}
 
 	public void addPositions(MyLinkedList<Position> positions) {
 		Iterator<Position> it = positions.iterator();
 		while (it.hasNext()) {
-			_positions.insertRear(it.next());
+			addPosition(it.next());
 		}
 	}
 
@@ -25,13 +25,13 @@ public class WordEntry {
 	}
 
 	public MyLinkedList<Position> getAllPositionsForThisWord() {
-		return _positions;
+		return _positions.getInOrderList();
 	}
 
 	public double getTermFrequency(String pageName) {
 		double freq = 0.0;
 		int N = 1;
-		Iterator<Position> it = _positions.iterator();
+		Iterator<Position> it = getAllPositionsForThisWord().iterator();
 		while (it.hasNext()) {
 			PageEntry pEntry = it.next().getPageEntry();
 			if (pEntry.equals(pageName)) {
