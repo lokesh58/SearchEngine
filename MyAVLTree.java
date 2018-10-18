@@ -104,6 +104,19 @@ public class MyAVLTree<T extends Comparable<T>> {
 		}
 	}
 
+	public MyLinkedList<T> getInOrderList() {
+		MyLinkedList<T> list = new MyLinkedList<>();
+		buildInOrderList(_root, list);
+		return list;
+	}
+
+	private void buildInOrderList(Node node, MyLinkedList<T> list) {
+		if (node == null) return;
+		buildInOrderList(node._left, list);
+		list.insertRear(node._data);
+		buildInOrderList(node._right, list);
+	}
+
 	public void delete(T key) {
 		_root = delete(_root, key);
 	}
