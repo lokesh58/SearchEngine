@@ -8,6 +8,7 @@ all:
 	javac PageEntry.java
 	javac MyHashTable.java
 	javac InvertedPageIndex.java
+	javac SearchResult.java
 	javac SearchEngine.java
 	javac checker.java
 
