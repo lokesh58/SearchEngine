@@ -1,4 +1,4 @@
-public class Position {
+public class Position implements Comparable<Position> {
 	private PageEntry _p;
 	private int _wordIndex;
 	
@@ -17,5 +17,15 @@ public class Position {
 
 	public boolean equals(Position other) {
 		return _p.equals(other._p) && _wordIndex == other._wordIndex;
+	}
+
+	public int compareTo(Position other) {
+		if (_wordIndex < other._wordIndex) {
+			return -1;
+		} else if (_wordIndex > other._wordIndex) {
+			return 1;
+		} else {
+			return _p.getPageName().compareTo(other._p.getPageName());
+		}
 	}
 }
