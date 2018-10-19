@@ -98,6 +98,14 @@ public class PageEntry {
 		return String.valueOf(arr).trim().toLowerCase();
 	}
 
+	public double getRelevanceOfPage(String str[], boolean doTheseWordsRepresentAPhrase) {
+		double relevance = 0.0;
+		//We cannot calculate relevance without the use of Inverted Page Index
+		//Beacause we won't be able to calculate inverse document frequency
+		//Therefore this function is implemented in SearchEngine class
+		return relevance;
+	}
+
 	public PageIndex getPageIndex() {
 		return _pageIndex;
 	}
