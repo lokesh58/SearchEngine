@@ -21,6 +21,7 @@ public class InvertedPageIndex {
 
 	public MySet<PageEntry> getPagesWhichContainWord(String word) {
 		MySet<PageEntry> webpages = new MySet<PageEntry>();
+		MySet<String> hack = new MySet<>();
 		WordEntry entry;
 		try {
 			entry = _invertedPageIndex.getWordEntryFor(word);
@@ -30,7 +31,11 @@ public class InvertedPageIndex {
 		MyLinkedList<Position> positions = entry.getAllPositionsForThisWord();
 		Iterator<Position> it = positions.iterator();
 		while (it.hasNext()) {
-			webpages.addElement(it.next().getPageEntry());
+			PageEntry p = it.next().getPageEntry();
+			if (!hack.isMember(p.getPageName())) {
+				webpages.addElement(p);
+				hack.addElement(p.getPageName());
+			}
 		}
 		return webpages;
 	}
@@ -38,15 +43,11 @@ public class InvertedPageIndex {
 	public MySet<PageEntry> getPagesWhichContainPhrase(String str[]) {
 		MySet<PageEntry> set = getPagesWhichContainWord(str[0]);
 		MySet<PageEntry> webpages = new MySet<>();
-		MySet<String> hack = new MySet<>();
 		Iterator<PageEntry> it = set.iterator();
 		while (it.hasNext()) {
 			PageEntry p = it.next();
 			if (p.getPhraseTermFrequency(str) != 0.0) {
-				if (!hack.isMember(p.getPageName())) {
-					hack.addElement(p.getPageName());
-					webpages.addElement(p);
-				}
+				webpages.addElement(p);
 			}
 		}
 		return webpages;
