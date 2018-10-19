@@ -1,13 +1,16 @@
 import java.io.*;
+import java.util.Iterator;
 
 public class PageEntry {
 	private String _pageName;
 	private PageIndex _pageIndex;
+	private MyAVLTree<Position> _allPositions;
 	private int _numWords;
 
 	PageEntry(String pageName) throws Exception {
 		_pageName = pageName;
 		_pageIndex = new PageIndex();
+		_allPositions = new MyAVLTree<>();
 		File file = new File("./webpages/"+pageName);
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		String str;
@@ -35,7 +38,9 @@ public class PageEntry {
 					default:
 						break;
 				}
-				_pageIndex.addPositionForWord(words[i], new Position(this, idx));
+				Position p = new Position(this, idx);
+				_pageIndex.addPositionForWord(words[i], p);
+				_allPositions.insert(p);
 			}
 		}
 		_numWords = idx-1;
@@ -98,12 +103,54 @@ public class PageEntry {
 		return String.valueOf(arr).trim().toLowerCase();
 	}
 
-	public double getRelevanceOfPage(String str[], boolean doTheseWordsRepresentAPhrase) {
-		double relevance = 0.0;
-		//We cannot calculate relevance without the use of Inverted Page Index
-		//Beacause we won't be able to calculate inverse document frequency
-		//Therefore this function is implemented in SearchEngine class
-		return relevance;
+	public WordEntry getWordEntryFor(String word) throws Exception {
+		Iterator<WordEntry> it = _pageIndex.getWordEntries().iterator();
+		while (it.hasNext()) {
+			WordEntry w = it.next();
+			if (w.equals(word)) {
+				return w;
+			}
+		}
+		throw new Exception("Webpage "+_pageName+" does not contain word "+word);
+	}
+
+	private boolean isWordAtPosition(String word, Position p) {
+		try {
+			WordEntry w = getWordEntryFor(word);
+			if (w.getPositionTree().find(p) != null) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public double getPhraseTermFrequency(String str[]) {
+		double m = 0.0;
+		WordEntry wEntry = null;
+		try {
+			wEntry = getWordEntryFor(str[0]);
+		} catch (Exception e) {
+			return 0.0;
+		}
+		Iterator<Position> it = wEntry.getAllPositionsForThisWord().iterator();
+		while (it.hasNext()) {
+			Position p = it.next();
+			boolean ok = true;
+			for (int i = 1; i < str.length; ++i) {
+				p = _allPositions.inOrderSuccessor(p);
+				if (p == null || !isWordAtPosition(str[i], p)) {
+					ok = false;
+					break;
+				}
+			}
+			if (ok) {
+				++m;
+			}
+		}
+		return m/(_numWords-(str.length-1)*m);
 	}
 
 	public PageIndex getPageIndex() {
