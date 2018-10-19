@@ -37,17 +37,14 @@ public class SearchEngine {
 		} catch (Exception e) {
 			return e.getMessage();
 		}
+		MySet<PageEntry> web = _invPgIdx.getPagesWhichContainWord(word);
 		MySet<SearchResult> webpages = new MySet<>();
-		MySet<String> hack = new MySet<>();
-		Iterator<Position> it = wEntry.getAllPositionsForThisWord().iterator();
-		double invDocFreq = Math.log(_webpageDatabase.size())-Math.log(webpages.size());
+		Iterator<PageEntry> it = web.iterator();
+		double invDocFreq = Math.log(_webpageDatabase.size())-Math.log(web.size());
 		while (it.hasNext()) {
-			PageEntry pEntry = it.next().getPageEntry();
+			PageEntry pEntry = it.next();
 			double rel = wEntry.getTermFrequency(pEntry.getPageName())*invDocFreq;
-			if (!hack.isMember(pEntry.getPageName())) {
-				webpages.addElement(new SearchResult(pEntry, rel));
-				hack.addElement(pEntry.getPageName());
-			}
+			webpages.addElement(new SearchResult(pEntry, rel));
 		}
 
 		ArrayList<SearchResult> list = sorter.sortThisList(webpages);
@@ -73,17 +70,8 @@ public class SearchEngine {
 	}
 
 	private String positionOfWordInAPage(String word, String pageName) {
-		Iterator<PageEntry> it = _webpageDatabase.iterator();
-		PageEntry pEntry = null;
-		boolean foundPage = false;
-		while (it.hasNext()) {
-			pEntry = it.next();
-			if (pEntry.equals(pageName)) {
-				foundPage = true;
-				break;
-			}
-		}
-		if (foundPage) {
+		PageEntry pEntry = findPage(pageName);
+		if (pEntry != null) {
 			MyLinkedList<WordEntry> wEntries = pEntry.getPageIndex().getWordEntries();
 			WordEntry wEntry = null;
 			Iterator<WordEntry> iter = wEntries.iterator();
