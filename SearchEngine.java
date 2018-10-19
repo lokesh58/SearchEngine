@@ -1,12 +1,15 @@
 import java.util.Iterator;
+import java.util.ArrayList;
 
 public class SearchEngine {
 	private InvertedPageIndex _invPgIdx;
 	private MyLinkedList<PageEntry> _webpageDatabase;
+	private MySort<SearchResult> sorter;
 
 	SearchEngine() {
 		_invPgIdx = new InvertedPageIndex();
 		_webpageDatabase = new MyLinkedList<PageEntry>();
+		sorter = new MySort<>();
 	}
 	
 	private void addPage(String pageName) throws Exception {
@@ -34,42 +37,39 @@ public class SearchEngine {
 		} catch (Exception e) {
 			return e.getMessage();
 		}
-		MySet<String> webpages = new MySet<>();
+		MySet<SearchResult> webpages = new MySet<>();
+		MySet<String> hack = new MySet<>();
 		Iterator<Position> it = wEntry.getAllPositionsForThisWord().iterator();
-		while (it.hasNext()) {
-			webpages.addElement(it.next().getPageEntry().getPageName());
-		}
-		MyLinkedList<String> sortedPages = new MyLinkedList<>();
 		double invDocFreq = Math.log(_webpageDatabase.size())-Math.log(webpages.size());
-		while (!webpages.isEmpty()) {
-			String maxRelPage = "";
-			double maxRel = -1.0;
-			Iterator<String> iter = webpages.iterator();
-			while (iter.hasNext()) {
-				String page = iter.next();
-				double rel = wEntry.getTermFrequency(page)*invDocFreq;
-				if (rel > maxRel) {
-					maxRel = rel;
-					maxRelPage = page;
-				}
-			}
-			sortedPages.insertRear(maxRelPage);
-			try {
-				webpages.deleteElement(maxRelPage);
-			} catch (Exception e) {
-				System.err.println("Error in pagesWhichConatinWord");
-				break;
+		while (it.hasNext()) {
+			PageEntry pEntry = it.next().getPageEntry();
+			double rel = wEntry.getTermFrequency(pEntry.getPageName())*invDocFreq;
+			if (!hack.isMember(pEntry.getPageName())) {
+				webpages.addElement(new SearchResult(pEntry, rel));
+				hack.addElement(pEntry.getPageName());
 			}
 		}
+
+		ArrayList<SearchResult> list = sorter.sortThisList(webpages);
 		String pages = "";
-		Iterator<String> iter = sortedPages.iterator();
-		while (iter.hasNext()) {
-			pages += iter.next();
-			if (iter.hasNext()) {
+		for (int i = 0; i < list.size(); ++i) {
+			pages += list.get(i).getPageEntry().getPageName();
+			if (i+1 < list.size()) {
 				pages += ", ";
 			}
 		}
 		return pages;
+	}
+
+	private PageEntry findPage(String pageName) {
+		Iterator<PageEntry> it = _webpageDatabase.iterator();
+		while (it.hasNext()) {
+			PageEntry p = it.next();
+			if (p.equals(pageName)) {
+				return p;
+			}
+		}
+		return null;
 	}
 
 	private String positionOfWordInAPage(String word, String pageName) {
@@ -115,8 +115,124 @@ public class SearchEngine {
 		}
 	}
 
+	private String pagesWhichContainAllWords(String words[]) {
+		WordEntry wEntries[] = new WordEntry[words.length];
+		double invDocFreq[] = new double[words.length];
+		MySet<String> web = new MySet<>();
+		for (int i = 0; i < words.length; ++i) {
+			try {
+				wEntries[i] = _invPgIdx.getWordEntryFor(words[i]);
+			} catch (Exception e) {
+				return "No webpage contains all these words";
+			}
+			MySet<String> set = new MySet<>();
+			Iterator<Position> it = wEntries[i].getAllPositionsForThisWord().iterator();
+			while (it.hasNext()) {
+				set.addElement(it.next().getPageEntry().getPageName());
+			}
+			invDocFreq[i] = Math.log(_webpageDatabase.size())-Math.log(set.size());
+			web = web.intersection(set);
+		}
+		if (web.isEmpty()) {
+			return "No webpage contains all these words";
+		}
+		MySet<SearchResult> webpages = new MySet<>();
+		Iterator<String> it = web.iterator();
+		while (it.hasNext()) {
+			String pageName = it.next();
+			PageEntry pEntry = findPage(pageName);
+			double rel = 0.0;
+			for (int i = 0; i < words.length; ++i) {
+				rel += wEntries[i].getTermFrequency(pageName)*invDocFreq[i];
+			}
+			webpages.addElement(new SearchResult(pEntry, rel));
+		}
+		
+		ArrayList<SearchResult> list = sorter.sortThisList(webpages);
+		String pages = "";
+		for (int i = 0; i < list.size(); ++i) {
+			pages += list.get(i).getPageEntry().getPageName();
+			if (i+1 < list.size()) {
+				pages += ", ";
+			}
+		}
+		return pages;
+	}
+
+	private String pagesWhichContainAnyOfTheseWords(String words[]) {
+		WordEntry wEntries[] = new WordEntry[words.length];
+		double invDocFreq[] = new double[words.length];
+		MySet<String> web = new MySet<>();
+		for (int i = 0; i < words.length; ++i) {
+			try {
+				wEntries[i] = _invPgIdx.getWordEntryFor(words[i]);
+			} catch (Exception e) {
+				wEntries[i] = null;
+				invDocFreq[i] = 0.0;
+			}
+			MySet<String> set = new MySet<>();
+			Iterator<Position> it = wEntries[i].getAllPositionsForThisWord().iterator();
+			while (it.hasNext()) {
+				set.addElement(it.next().getPageEntry().getPageName());
+			}
+			invDocFreq[i] = Math.log(_webpageDatabase.size())-Math.log(set.size());
+			web = web.union(set);
+		}
+		if (web.isEmpty()) {
+			return "No webpage contains any of these words";
+		}
+		MySet<SearchResult> webpages = new MySet<>();
+		Iterator<String> it = web.iterator();
+		while (it.hasNext()) {
+			String pageName = it.next();
+			PageEntry pEntry = findPage(pageName);
+			double rel = 0.0;
+			for (int i = 0; i < words.length; ++i) {
+				if (wEntries[i] == null) continue;
+				rel += wEntries[i].getTermFrequency(pageName)*invDocFreq[i];
+			}
+			webpages.addElement(new SearchResult(pEntry, rel));
+		}
+		
+		ArrayList<SearchResult> list = sorter.sortThisList(webpages);
+		String pages = "";
+		for (int i = 0; i < list.size(); ++i) {
+			pages += list.get(i).getPageEntry().getPageName();
+			if (i+1 < list.size()) {
+				pages += ", ";
+			}
+		}
+		return pages;
+	}
+
+	private String pagesWhichContainPhrase(String words[]) {
+		MySet<PageEntry> web = _invPgIdx.getPagesWhichContainPhrase(words);
+		if (web.isEmpty()) {
+			return "No webpage contains the given phrase";
+		}
+		MySet<SearchResult> webpages = new MySet<>();
+		Iterator<PageEntry> it = web.iterator();
+		double invDocFreq = Math.log(_webpageDatabase.size())-Math.log(web.size());
+		while (it.hasNext()) {
+			PageEntry pEntry = it.next();
+			double rel = pEntry.getPhraseTermFrequency(words)*invDocFreq;
+			webpages.addElement(new SearchResult(pEntry, rel));
+		}
+
+		ArrayList<SearchResult> list = sorter.sortThisList(webpages);
+		String pages = "";
+		for (int i = 0; i < list.size(); ++i) {
+			pages += list.get(i).getPageEntry().getPageName();
+			if (i+1 < list.size()) {
+				pages += ", ";
+			}
+		}
+		return pages;
+	}
+
 	public void performAction(String actionMessage) {
 		String tokens[] = actionMessage.trim().split("\\s+");
+		String words[] = new String[tokens.length-1];
 		String answer = null, x, y;
 		try {
 			switch (tokens[0]) {
@@ -147,6 +263,33 @@ public class SearchEngine {
 					x = fixWord(tokens[1]);
 					y = tokens[2];
 					answer = positionOfWordInAPage(x, y);
+					break;
+				case "queryFindPagesWhichContainAllWord":
+					if (tokens.length < 2) {
+						throw new Exception("Error - At least one word needed");
+					}
+					for (int i = 0; i < words.length; ++i) {
+						words[i] = fixWord(tokens[i+1]);
+					}
+					answer = pagesWhichContainAllWords(words);
+					break;
+				case "queryFindPagesWhichContainAnyOfTheseWords":
+					if (tokens.length < 2) {
+						throw new Exception("Error - At least one word needed");
+					}
+					for (int i = 0; i < words.length; ++i) {
+						words[i] = fixWord(tokens[i+1]);
+					}
+					answer = pagesWhichContainAnyOfTheseWords(words);
+					break;
+				case "queryFindPagesWhichContainPhrase":
+					if (tokens.length < 2) {
+						throw new Exception("Error - At least one word needed");
+					}
+					for (int i = 0; i < words.length; ++i) {
+						words[i] = fixWord(tokens[i+1]);
+					}
+					answer = pagesWhichContainPhrase(words);
 					break;
 				default:
 					break;
