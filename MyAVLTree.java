@@ -17,7 +17,7 @@ public class MyAVLTree<T extends Comparable<T>> implements Iterable<T> {
 	MyAVLTree() {
 		_root = null;
 	}
-	
+
 	public void insert(T data) {
 		_root = insert(_root, data);
 	}
@@ -89,17 +89,49 @@ public class MyAVLTree<T extends Comparable<T>> implements Iterable<T> {
 		}
 	}
 
-	public T find(T key) {
-		return find(_root, key);
+	public T inOrderSuccessor(T key) {
+		Node n = find(_root, key);
+		if (n == null) return null;
+		if (n._right != null) {
+			Node curr = n._right;
+			while (curr._left != null) {
+				curr = curr._left;
+			}
+			return curr._data;
+		} else {
+			Node last_left = null, curr = _root;
+			while (curr != null && curr._data.compareTo(key) != 0) {
+				if (key.compareTo(curr._data) > 0) {
+					curr = curr._right;
+				} else {
+					last_left = curr;
+					curr = curr._left;
+				}
+			}
+			if (last_left == null) {
+				return null;
+			} else {
+				return last_left._data;
+			}
+		}
 	}
 
-	private T find(Node node, T key) {
+	public T find(T key) {
+		Node n = find(_root, key);
+		if (n != null) {
+			return n._data;
+		} else {
+			return null;
+		}
+	}
+
+	private Node find(Node node, T key) {
 		if (node == null) {
 			return null;
 		} else {
 			int result = key.compareTo(node._data);
 			if (result == 0) {
-				return node._data;
+				return node;
 			} else if (result > 0) {
 				return find(node._right, key);
 			} else {
