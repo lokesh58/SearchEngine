@@ -62,10 +62,8 @@ public class MyAVLTree<T extends Comparable<T>> implements Iterable<T> {
 		} else {
 			if (data.compareTo(node._data) > 0) {
 				node._right = insert(node._right, data);
-			} else if (data.compareTo(node._data) < 0) {
+			} else {
 				node._left = insert(node._left, data);
-			} else {//Duplicate data not inserted
-				return node;
 			}
 			node._height = 1+Math.max(height(node._left), height(node._right));
 			int balance = getBalance(node);
