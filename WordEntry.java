@@ -1,6 +1,6 @@
 import java.util.Iterator;
 
-public class WordEntry {
+public class WordEntry implements Comparable<WordEntry> {
 	private String _word;
 	private MyAVLTree<Position> _positions;
 
@@ -46,11 +46,15 @@ public class WordEntry {
 		return freq/N;
 	}
 
+	public int compareTo(WordEntry other) {
+		return _word.compareTo(other._word);
+	}
+
 	public boolean equals(String word) {
 		return _word.equals(word);
 	}
 
 	public boolean equals(WordEntry other) {
-		return _word.equals(other._word) && _positions == other._positions;
+		return _word.equals(other._word);
 	}
 }
