@@ -4,22 +4,23 @@ import java.util.Iterator;
 public class MySort<T extends Comparable<T>> {
 	public ArrayList<T> sortThisList(MySet<T> listOfSortableEntries) {
 		ArrayList<T> sortedList = new ArrayList<T>(listOfSortableEntries.size());
-		while (!listOfSortableEntries.isEmpty()) {
-			Iterator<T> it = listOfSortableEntries.iterator();
-			T biggestEntry = it.next();
-			while (it.hasNext()) {
-				T entry = it.next();
-				if (entry.compareTo(biggestEntry) > 0) {
-					biggestEntry = entry;
-				}
-			}
-			sortedList.add(biggestEntry);
-			try {
-				listOfSortableEntries.deleteElement(biggestEntry);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		MyAVLTree<T> tree = new MyAVLTree<>();
+		Iterator<T> it = listOfSortableEntries.iterator();
+		while (it.hasNext()) {
+			tree.insert(it.next());
 		}
-		return sortedList;
+		it = tree.getInOrderList().iterator();
+		while (it.hasNext()) {
+			sortedList.add(it.next());
+		}
+		return reverse(sortedList);//To get in descending order
+	}
+
+	private ArrayList<T> reverse(ArrayList<T> list) {
+		ArrayList<T> rev = new ArrayList<>(list.size());
+		for (int i = list.size()-1; i >= 0; --i) {
+			rev.add(list.get(i));
+		}
+		return rev;
 	}
 }
