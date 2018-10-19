@@ -20,7 +20,7 @@ public class SearchResult implements Comparable<SearchResult> {
 		} else if (_relevance < other._relevance) {
 			return -1;
 		} else {
-			return 0;
+			return _pEntry.getPageName().compareTo(other._pEntry.getPageName());
 		}
 	}
 	
