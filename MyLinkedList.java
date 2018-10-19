@@ -119,6 +119,7 @@ public class MyLinkedList<T> implements Iterable<T> {
 				if (curr._next._data.equals(item)) {
 					break;
 				}
+				curr = curr._next;
 			}
 			if (curr == _rear) {
 				throw new Exception("Error - The given item not in list");
