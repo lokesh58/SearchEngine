@@ -23,4 +23,8 @@ public class SearchResult implements Comparable<SearchResult> {
 			return 0;
 		}
 	}
+	
+	public boolean equals(SearchResult other) {
+		return _pEntry.equals(other._pEntry);
+	}
 }
