@@ -34,4 +34,21 @@ public class InvertedPageIndex {
 		}
 		return webpages;
 	}
+
+	public MySet<PageEntry> getPagesWhichContainPhrase(String str[]) {
+		MySet<PageEntry> set = getPagesWhichContainWord(str[0]);
+		MySet<PageEntry> webpages = new MySet<>();
+		MySet<String> hack = new MySet<>();
+		Iterator<PageEntry> it = set.iterator();
+		while (it.hasNext()) {
+			PageEntry p = it.next();
+			if (p.getPhraseTermFrequency(str) != 0.0) {
+				if (!hack.isMember(p.getPageName())) {
+					hack.addElement(p.getPageName());
+					webpages.addElement(p);
+				}
+			}
+		}
+		return webpages;
+	}
 }
