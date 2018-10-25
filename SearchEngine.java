@@ -107,6 +107,10 @@ public class SearchEngine {
 		WordEntry wEntries[] = new WordEntry[words.length];
 		double invDocFreq[] = new double[words.length];
 		MySet<String> web = new MySet<>();
+		Iterator<PageEntry> itt = _webpageDatabase.iterator();
+		while (itt.hasNext()) {
+			web.addElement(itt.next().getPageName());
+		}
 		for (int i = 0; i < words.length; ++i) {
 			try {
 				wEntries[i] = _invPgIdx.getWordEntryFor(words[i]);
@@ -252,7 +256,7 @@ public class SearchEngine {
 					y = tokens[2];
 					answer = positionOfWordInAPage(x, y);
 					break;
-				case "queryFindPagesWhichContainAllWord":
+				case "queryFindPagesWhichContainAllWords":
 					if (tokens.length < 2) {
 						throw new Exception("Error - At least one word needed");
 					}
@@ -280,6 +284,7 @@ public class SearchEngine {
 					answer = pagesWhichContainPhrase(words);
 					break;
 				default:
+					answer = "Unknown Query";
 					break;
 			}
 		} catch (Exception e) {
