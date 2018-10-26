@@ -2,7 +2,7 @@ addPage stack_datastructure_wiki
 queryFindPagesWhichContainWord delhi
 queryFindPagesWhichContainWord stack
 queryFindPagesWhichContainWord wikipedia
-queryFindPositionsOfWordInAPage stack stack_datastructure_wiki
+queryFindPositionsOfWordInAPage stack stackoverflow
 queryFindPagesWhichContainWord allain
 addPage stack_cprogramming
 queryFindPagesWhichContainWord allain
@@ -12,8 +12,6 @@ addPage stack_oracle
 queryFindPagesWhichContainWord jdk
 addPage stackoverflow
 queryFindPagesWhichContainWord function
-queryFindPagesWhichContainWord stack
-queryFindPositionsOfWordInAPage stack stack_datastructure_wiki
 addPage stacklighting
 addPage stackmagazine
 queryFindPagesWhichContainWord magazines
@@ -21,15 +19,10 @@ addPage stacks_and_queues
 addPage cmu_stack
 addPage studytonight
 addPage auckland_stack
-queryFindPositionsOfWordInAPage stack stack_datastructure_wiki
 addPage geeks_quiz
-queryFindPositionsOfWordInAPage stack stack_datastructure_wiki
-queryFindPositionsOfWordInAPage stack geeks_quiz
 queryFindPagesWhichContainAllWords data structure first
 queryFindPagesWhichContainAnyOfTheseWords stack data structure first
-queryFindPositionsOfWordInAPage stack stack_datastructure_wiki
 queryFindPagesWhichContainPhrase data structure
 queryFindPositionsOfWordInAPage stack stack_datastructure_wiki
 queryFindPagesWhichContainWord applications
-queryFindPagesWhichContainPhrase data structure study structure
 queryFindPagesWhichContainWord stack

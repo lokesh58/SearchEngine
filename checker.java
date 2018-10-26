@@ -7,14 +7,14 @@ public class checker
 	public static void main ( String args [])
 	{
 		BufferedReader br = null;
-		SearchEngine egn = new SearchEngine();
+		SearchEngine r = new SearchEngine();
 
 		try {
 			String actionString;
 			br = new BufferedReader(new FileReader("actions.txt"));
 
 			while ((actionString = br.readLine()) != null) {
-				egn.performAction(actionString);
+				r.performAction(actionString);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

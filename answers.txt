@@ -1,24 +1,17 @@
 No webpage contains word delhi
 stack_datastructure_wiki
 stack_datastructure_wiki
-1, 14, 71, 130, 142, 153, 170, 191, 204, 208, 223, 228, 256, 267, 289, 294, 326, 336, 350, 363, 382, 395, 409, 436, 441, 459
+No webpage stackoverflow found
 No webpage contains word allain
 stack_cprogramming
 stack_cprogramming
 stack_cprogramming
 stack_oracle
 stackoverflow, stack_cprogramming, stack_datastructure_wiki
-stackoverflow, stack_oracle, stack_datastructure_wiki, stack_cprogramming
-1, 14, 71, 130, 142, 153, 170, 191, 204, 208, 223, 228, 256, 267, 289, 294, 326, 336, 350, 363, 382, 395, 409, 436, 441, 459
 stackmagazine
-1, 14, 71, 130, 142, 153, 170, 191, 204, 208, 223, 228, 256, 267, 289, 294, 326, 336, 350, 363, 382, 395, 409, 436, 441, 459
-1, 14, 71, 130, 142, 153, 170, 191, 204, 208, 223, 228, 256, 267, 289, 294, 326, 336, 350, 363, 382, 395, 409, 436, 441, 459
-1, 43, 50, 53, 71, 87, 108, 117, 159, 184, 192, 257
 stacks_and_queues, stack_cprogramming, cmu_stack, studytonight, stack_datastructure_wiki, geeks_quiz
 stacks_and_queues, stack_cprogramming, cmu_stack, stacklighting, studytonight, stack_datastructure_wiki, stackoverflow, geeks_quiz, stack_oracle, auckland_stack, stackmagazine
-1, 14, 71, 130, 142, 153, 170, 191, 204, 208, 223, 228, 256, 267, 289, 294, 326, 336, 350, 363, 382, 395, 409, 436, 441, 459
 stack_cprogramming, cmu_stack, stacks_and_queues, studytonight, stack_datastructure_wiki, geeks_quiz
 1, 14, 71, 130, 142, 153, 170, 191, 204, 208, 223, 228, 256, 267, 289, 294, 326, 336, 350, 363, 382, 395, 409, 436, 441, 459
 geeks_quiz, studytonight, cmu_stack
-No webpage contains the given phrase
 studytonight, stacks_and_queues, stackoverflow, stackmagazine, stacklighting, stack_oracle, stack_datastructure_wiki, stack_cprogramming, geeks_quiz, cmu_stack, auckland_stack
